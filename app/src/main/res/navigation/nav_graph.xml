@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    app:startDestination="@id/homePage">
+
+    <fragment
+        android:id="@+id/homePage"
+        android:name="com.nbialas.warsstarapp.pages.homePage.HomePage"
+        android:label="HomePage" />
+    <fragment
+        android:id="@+id/detailsPage"
+        android:name="com.nbialas.warsstarapp.pages.detailsPage.DetailsPage"
+        android:label="DetailsPage" />
+</navigation>

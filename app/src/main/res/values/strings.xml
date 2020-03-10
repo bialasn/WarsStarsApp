@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WarsStarApp</string>
+    <string name="error_text">Złego coś stało się :(</string>
+    <string name="contentDesc">image</string>
+</resources>
