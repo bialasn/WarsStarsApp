@@ -5,14 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.nbialas.warsstarapp.R
-import com.nbialas.warsstarapp.models.movie.SingleMovie
+import kotlinx.android.synthetic.main.item_character.view.*
 
 
 class CharacterAdapter : RecyclerView.Adapter<CharacterHolder>() {
 
-    private var data: List<SingleMovie>? = null
+    private var data: List<String>? = null
 
-    fun setData(items: List<SingleMovie>?) {
+    fun setData(items: List<String>?) {
         this.data = items
         notifyDataSetChanged()
     }
@@ -29,13 +29,7 @@ class CharacterAdapter : RecyclerView.Adapter<CharacterHolder>() {
 
     override fun onBindViewHolder(holder: CharacterHolder, position: Int) {
         val movie = data?.get(position)
-//        movie?.let {
-//            holder.itemView.movieTitle.text = it.title
-//            holder.itemView.setOnClickListener {
-//                onClickAction(movie.url)
-//            }
-        // }
-
+        holder.itemView.nameOfCharacter.text = movie
     }
 }
 

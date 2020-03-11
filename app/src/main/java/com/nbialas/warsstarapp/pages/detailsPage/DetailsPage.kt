@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nbialas.warsstarapp.R
 import com.nbialas.warsstarapp.const.Const.MOVIE_ID
 import com.nbialas.warsstarapp.models.movie.SingleMovie
+import com.nbialas.warsstarapp.tools.Tools.setVisibility
 import kotlinx.android.synthetic.main.page_single_movie.*
 
 
@@ -31,8 +33,27 @@ class DetailsPage : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setAdapter()
+
         titleMovie.text = viewModel.movieTitle
+
+        setListeners()
+
         viewModel.prepareList()
+
+
+    }
+
+
+    private fun setListeners() {
+        viewModel.isReady.observe(viewLifecycleOwner, Observer {
+            if (it) adapter.setData(viewModel.charactersToAdapter)
+        })
+        viewModel.showProgressBar.observe(viewLifecycleOwner, Observer {
+            progressBarSingleMovie.visibility = setVisibility(it)
+        })
+        viewModel.showError.observe(viewLifecycleOwner, Observer {
+            errorMessageCharacterList.visibility = setVisibility(it)
+        })
     }
 
     private fun setAdapter() {

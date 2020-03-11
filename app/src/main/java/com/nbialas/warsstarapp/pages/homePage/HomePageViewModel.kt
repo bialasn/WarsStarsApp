@@ -1,6 +1,5 @@
 package com.nbialas.warsstarapp.pages.homePage
 
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.nbialas.warsstarapp.base.BaseViewModel
 import com.nbialas.warsstarapp.models.movie.SingleMovie
@@ -10,7 +9,7 @@ import io.reactivex.schedulers.Schedulers
 
 class HomePageViewModel : BaseViewModel() {
     var listOfMovie = MutableLiveData<List<SingleMovie>>()
-    var showError = MutableLiveData<Boolean>()
+    var showError = MutableLiveData<Boolean>(false)
     var showProgressBar = MutableLiveData<Boolean>()
 
     fun getAllMovies() {

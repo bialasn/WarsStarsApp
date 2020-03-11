@@ -6,5 +6,4 @@ import java.io.Serializable
 data class MovieResponse(
     @SerializedName("results")
     var results: List<SingleMovie> = listOf()
-
 ) : Serializable

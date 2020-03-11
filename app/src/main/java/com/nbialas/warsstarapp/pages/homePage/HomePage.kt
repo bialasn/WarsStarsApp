@@ -56,7 +56,6 @@ class HomePage : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = this@HomePage.adapter
         }
-
         adapter.onClickAction = {
             findNavController().navigate(
                 R.id.detailsPage, bundleOf(Pair(MOVIE_ID, SingleMovie(it.title, it.characters)))
