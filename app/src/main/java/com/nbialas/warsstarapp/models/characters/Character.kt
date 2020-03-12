@@ -7,4 +7,5 @@ data class Character(
 
     @SerializedName("name")
     var characterName: String = ""
+
 ):Serializable

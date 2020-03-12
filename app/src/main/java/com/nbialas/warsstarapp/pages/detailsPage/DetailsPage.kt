@@ -15,17 +15,18 @@ import kotlinx.android.synthetic.main.page_single_movie.*
 
 
 class DetailsPage : Fragment() {
+
     lateinit var viewModel: DetailsPageViewModel
     private val adapter by lazy { CharacterAdapter() }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProviders.of(this).get(DetailsPageViewModel::class.java)
-        arguments?.getParcelable<SingleMovie>(MOVIE_ID)?.let {
-            viewModel.movieTitle = it.title
-            viewModel.charactersList = it.characters
-        }
+
+        getArgumentsFromFragment()
+
         return inflater.inflate(R.layout.page_single_movie, container, false)
     }
 
@@ -38,8 +39,6 @@ class DetailsPage : Fragment() {
         setListeners()
 
         viewModel.prepareList()
-
-
     }
 
     private fun setListeners() {
@@ -58,6 +57,13 @@ class DetailsPage : Fragment() {
         characterRecycler.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = this@DetailsPage.adapter
+        }
+    }
+
+    private fun getArgumentsFromFragment() {
+        arguments?.getParcelable<SingleMovie>(MOVIE_ID)?.let {
+            viewModel.movieTitle = it.title
+            viewModel.charactersList = it.characters
         }
     }
 }

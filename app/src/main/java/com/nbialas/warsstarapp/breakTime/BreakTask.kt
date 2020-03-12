@@ -8,6 +8,5 @@ fun isThereABreak(currentTime: Int, startTime: Int, endTime: Int): Boolean {
             return true
         }
         return false
-
     }
 }

@@ -17,9 +17,8 @@ import kotlinx.android.synthetic.main.page_home.*
 
 class HomePage : Fragment() {
 
-    lateinit var viewModel: HomePageViewModel
+    private lateinit var viewModel: HomePageViewModel
     private val adapter by lazy { MoviesAdapter() }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
