@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.nbialas.warsstarapp.R
 import com.nbialas.warsstarapp.const.Const.MOVIE_ID
 import com.nbialas.warsstarapp.models.movie.SingleMovie
-import com.nbialas.warsstarapp.tools.Tools.setVisibility
 import kotlinx.android.synthetic.main.page_single_movie.*
 
 
@@ -43,16 +42,15 @@ class DetailsPage : Fragment() {
 
     }
 
-
     private fun setListeners() {
-        viewModel.isReady.observe(viewLifecycleOwner, Observer {
-            if (it) adapter.setData(viewModel.charactersToAdapter)
+        viewModel.isDataReadyToShow.observe(viewLifecycleOwner, Observer {
+            if (it) adapter.setData(viewModel.listToAdapter)
         })
         viewModel.showProgressBar.observe(viewLifecycleOwner, Observer {
-            progressBarSingleMovie.visibility = setVisibility(it)
+            progressBarSingleMovie.visibility = viewModel.setVisibility(it)
         })
         viewModel.showError.observe(viewLifecycleOwner, Observer {
-            errorMessageCharacterList.visibility = setVisibility(it)
+            errorMessageCharacterList.visibility = viewModel.setVisibility(it)
         })
     }
 

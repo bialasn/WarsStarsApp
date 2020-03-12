@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.nbialas.warsstarapp.R
 import com.nbialas.warsstarapp.const.Const.MOVIE_ID
 import com.nbialas.warsstarapp.models.movie.SingleMovie
-import com.nbialas.warsstarapp.tools.Tools.setVisibility
 import kotlinx.android.synthetic.main.page_home.*
 
 class HomePage : Fragment() {
@@ -40,15 +39,28 @@ class HomePage : Fragment() {
     }
 
     private fun setListeners() {
+        refreshButton.setOnClickListener {
+            viewModel.getAllMovies()
+        }
+
         viewModel.listOfMovie.observe(viewLifecycleOwner, Observer {
+            showRecycler(true)
             adapter.setData(it)
         })
-        viewModel.showError.observe(viewLifecycleOwner, Observer {
-            errorMessage.visibility = setVisibility(it)
+        viewModel.showError.observe(viewLifecycleOwner, Observer { show ->
+            listOf<View>(errorMessage, refreshButton).forEach {
+                it.visibility = viewModel.setVisibility(show)
+            }
+            showRecycler(false)
         })
         viewModel.showProgressBar.observe(viewLifecycleOwner, Observer {
-            progressBar.visibility = setVisibility(it)
+            progressBar.visibility = viewModel.setVisibility(it)
         })
+    }
+
+
+    private fun showRecycler(show: Boolean) {
+        movieRecycler.visibility = viewModel.setVisibility(show)
     }
 
     private fun setAdapter() {

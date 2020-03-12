@@ -8,24 +8,22 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class DetailsPageViewModel : BaseViewModel() {
-    var isReady = MutableLiveData<Boolean>(false)
+    var isDataReadyToShow = MutableLiveData<Boolean>(false)
     var movieTitle: String = ""
 
     var charactersList = listOf<String>()
-    var listToDownload = arrayListOf<String>()
-    var charactersToAdapter = arrayListOf<String>()
+    var listToAdapter = arrayListOf<String>()
 
     var showProgressBar = MutableLiveData<Boolean>()
     var showError = MutableLiveData<Boolean>(false)
 
 
     fun prepareList() {
-        listToDownload.addAll(charactersList.map { it.replace(CHARACTER_PREFIX, "") })
-        listToDownload.forEach {
+        charactersList = charactersList.map { it.replace(CHARACTER_PREFIX, "") }
+        charactersList.forEach {
             getCharactersFromSWAPI(it)
         }
     }
-
 
     private fun getCharactersFromSWAPI(name: String) {
         showProgressBar.postValue(true)
@@ -33,9 +31,9 @@ class DetailsPageViewModel : BaseViewModel() {
             StarWarsRest.service.singleCharacter(name).subscribeOn(Schedulers.io()).observeOn(
                 AndroidSchedulers.mainThread()
             ).subscribe({
-                charactersToAdapter.add(it.characterName)
-                if (charactersToAdapter.size == listToDownload.size) {
-                    isReady.postValue(true)
+                listToAdapter.add(it.characterName)
+                if (listToAdapter.size == charactersList.size) {
+                    isDataReadyToShow.postValue(true)
                     showProgressBar.postValue(false)
                     showError.postValue(false)
                 }

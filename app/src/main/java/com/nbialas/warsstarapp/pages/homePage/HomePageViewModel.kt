@@ -14,13 +14,14 @@ class HomePageViewModel : BaseViewModel() {
 
     fun getAllMovies() {
         showProgressBar.postValue(true)
+        showError.postValue(false)
         rxDisposer.add(
             StarWarsRest.service.allMovies().subscribeOn(Schedulers.io()).observeOn(
                 AndroidSchedulers.mainThread()
             ).subscribe({
-                listOfMovie.postValue(it.results)
                 showError.postValue(false)
                 showProgressBar.postValue(false)
+                listOfMovie.postValue(it.results)
             }, {
                 showError.postValue(true)
                 showProgressBar.postValue(false)
