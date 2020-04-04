@@ -2,12 +2,10 @@ package com.nbialas.warsstarapp.pages.homePage
 
 import androidx.lifecycle.MutableLiveData
 import com.nbialas.warsstarapp.base.BaseViewModel
-import com.nbialas.warsstarapp.listeners.ProgressBarInterface
-import com.nbialas.warsstarapp.models.movie.SingleMovie
 import com.nbialas.warsstarapp.rest.StarWarsRest
-import com.nbialas.warsstarapp.stateClass.ResponseFailed
+import com.nbialas.warsstarapp.stateClass.ResponseMoviesFailed
+import com.nbialas.warsstarapp.stateClass.ResponseMoviesSuccess
 import com.nbialas.warsstarapp.stateClass.ResponseState
-import com.nbialas.warsstarapp.stateClass.ResponseSuccess
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -20,9 +18,9 @@ class HomePageViewModel : BaseViewModel() {
             StarWarsRest.service.allMovies().subscribeOn(Schedulers.io()).observeOn(
                 AndroidSchedulers.mainThread()
             ).subscribe({
-                state.postValue(ResponseSuccess(it.results))
+                state.postValue(ResponseMoviesSuccess(it.results))
             }, {
-                state.postValue(ResponseFailed)
+                state.postValue(ResponseMoviesFailed)
             })
         )
     }

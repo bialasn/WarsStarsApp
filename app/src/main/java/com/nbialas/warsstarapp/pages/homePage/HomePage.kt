@@ -14,8 +14,8 @@ import com.nbialas.warsstarapp.base.BasePage
 import com.nbialas.warsstarapp.const.Const.MOVIE_ID
 import com.nbialas.warsstarapp.listeners.ProgressBarInterface
 import com.nbialas.warsstarapp.models.movie.SingleMovie
-import com.nbialas.warsstarapp.stateClass.ResponseFailed
-import com.nbialas.warsstarapp.stateClass.ResponseSuccess
+import com.nbialas.warsstarapp.stateClass.ResponseMoviesFailed
+import com.nbialas.warsstarapp.stateClass.ResponseMoviesSuccess
 import kotlinx.android.synthetic.main.page_home.*
 
 class HomePage : BasePage() {
@@ -43,16 +43,14 @@ class HomePage : BasePage() {
 
     private fun setObservers() {
         viewModel.state.observe(viewLifecycleOwner, Observer { responseState ->
+            ProgressBarInterface.post().showProgressBar(false)
             when (responseState) {
-                is ResponseSuccess -> {
-                    ProgressBarInterface.post().showProgressBar(false)
+                is ResponseMoviesSuccess -> {
                     showError(false)
-                    moviesAdapter.setData(responseState.list)
+                    moviesAdapter.setData(responseState.listOfMovie)
                     showRecycler(true)
-
                 }
-                is ResponseFailed -> {
-                    ProgressBarInterface.post().showProgressBar(false)
+                is ResponseMoviesFailed -> {
                     showError(true)
                     showRecycler(false)
                 }
@@ -63,6 +61,8 @@ class HomePage : BasePage() {
 
     private fun setListeners() {
         refreshButton.setOnClickListener {
+            ProgressBarInterface.post().showProgressBar(true)
+            showError(false)
             viewModel.getAllMovies()
         }
     }

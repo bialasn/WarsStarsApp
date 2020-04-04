@@ -3,44 +3,50 @@ package com.nbialas.warsstarapp.pages.detailsPage
 import androidx.lifecycle.MutableLiveData
 import com.nbialas.warsstarapp.base.BaseViewModel
 import com.nbialas.warsstarapp.const.Const.CHARACTER_PREFIX
+import com.nbialas.warsstarapp.models.movie.SingleMovie
 import com.nbialas.warsstarapp.rest.StarWarsRest
+import com.nbialas.warsstarapp.stateClass.ResponseCharactersFailed
+import com.nbialas.warsstarapp.stateClass.ResponseCharactersSuccess
+import com.nbialas.warsstarapp.stateClass.ResponseState
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class DetailsPageViewModel : BaseViewModel() {
-    var isDataReadyToShow = MutableLiveData<Boolean>(false)
-    var movieTitle: String = ""
+    var state = MutableLiveData<ResponseState>()
+    var singleMovie = MutableLiveData<SingleMovie>()
 
-    var charactersList = listOf<String>()
-    var listToAdapter = arrayListOf<String>()
+    private var charactersList = listOf<String>()
+    private var listToAdapter = arrayListOf<String>()
 
-    var showProgressBar = MutableLiveData<Boolean>()
-    var showError = MutableLiveData<Boolean>(false)
-
-
-    fun prepareList() {
-        charactersList = charactersList.map { it.replace(CHARACTER_PREFIX, "") }
-        charactersList.forEach {
-            getCharactersFromSWAPI(it)
+    private fun prepareCharacterList(movie: SingleMovie) {
+        charactersList = movie.characters.map {
+            it.replace(CHARACTER_PREFIX, "")
         }
+        if (charactersList.isNotEmpty()) {
+            charactersList.forEach {
+                getCharactersFromSWAPI(it)
+            }
+        } else state.postValue(ResponseCharactersFailed)
     }
 
+
     private fun getCharactersFromSWAPI(name: String) {
-        showProgressBar.postValue(true)
         rxDisposer.add(
             StarWarsRest.service.singleCharacter(name).subscribeOn(Schedulers.io()).observeOn(
                 AndroidSchedulers.mainThread()
             ).subscribe({
                 listToAdapter.add(it.characterName)
                 if (listToAdapter.size == charactersList.size) {
-                    isDataReadyToShow.postValue(true)
-                    showProgressBar.postValue(false)
-                    showError.postValue(false)
+                    state.postValue(ResponseCharactersSuccess(listToAdapter))
                 }
             }, {
-                showError.postValue(true)
-                showProgressBar.postValue(false)
+                state.postValue(ResponseCharactersFailed)
             })
         )
+    }
+
+    fun setSingleMovieValue(movie: SingleMovie) {
+        singleMovie.postValue(movie)
+        prepareCharacterList(movie)
     }
 }

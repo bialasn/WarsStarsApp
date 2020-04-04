@@ -4,20 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nbialas.warsstarapp.R
 import com.nbialas.warsstarapp.base.BasePage
 import com.nbialas.warsstarapp.const.Const.MOVIE_ID
+import com.nbialas.warsstarapp.listeners.ProgressBarInterface
 import com.nbialas.warsstarapp.models.movie.SingleMovie
+import com.nbialas.warsstarapp.stateClass.ResponseCharactersFailed
+import com.nbialas.warsstarapp.stateClass.ResponseCharactersSuccess
 import kotlinx.android.synthetic.main.page_single_movie.*
 
 
 class DetailsPage : BasePage() {
 
-    lateinit var viewModel: DetailsPageViewModel
+    private lateinit var viewModel: DetailsPageViewModel
     private val adapter by lazy { CharacterAdapter() }
 
     override fun onCreateView(
@@ -33,24 +35,26 @@ class DetailsPage : BasePage() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setAdapter()
-
-        titleMovie.text = viewModel.movieTitle
-
         setListeners()
-
-        viewModel.prepareList()
+        ProgressBarInterface.post().showProgressBar(true)
     }
 
     private fun setListeners() {
-        viewModel.isDataReadyToShow.observe(viewLifecycleOwner, Observer {
-            if (it) adapter.setData(viewModel.listToAdapter)
+        viewModel.singleMovie.observe(viewLifecycleOwner, Observer {
+            titleMovie.text = it.title
         })
-        viewModel.showProgressBar.observe(viewLifecycleOwner, Observer {
-            progressBarSingleMovie.visibility = setVisibility(it)
-        })
-        viewModel.showError.observe(viewLifecycleOwner, Observer {
-            errorMessageCharacterList.visibility = setVisibility(it)
+        viewModel.state.observe(viewLifecycleOwner, Observer {
+            ProgressBarInterface.post().showProgressBar(false)
+            when (it) {
+                is ResponseCharactersSuccess -> {
+                    adapter.setData(it.listOfCharacters)
+                }
+                is ResponseCharactersFailed -> {
+                    errorMessageCharacterList.visibility = setVisibility(true)
+                }
+            }
         })
     }
 
@@ -63,8 +67,7 @@ class DetailsPage : BasePage() {
 
     private fun getArgumentsFromFragment() {
         arguments?.getParcelable<SingleMovie>(MOVIE_ID)?.let {
-            viewModel.movieTitle = it.title
-            viewModel.charactersList = it.characters
+            viewModel.setSingleMovieValue(it)
         }
     }
 }
