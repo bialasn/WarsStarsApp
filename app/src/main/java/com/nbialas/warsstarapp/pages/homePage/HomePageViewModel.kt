@@ -2,30 +2,27 @@ package com.nbialas.warsstarapp.pages.homePage
 
 import androidx.lifecycle.MutableLiveData
 import com.nbialas.warsstarapp.base.BaseViewModel
+import com.nbialas.warsstarapp.listeners.ProgressBarInterface
 import com.nbialas.warsstarapp.models.movie.SingleMovie
 import com.nbialas.warsstarapp.rest.StarWarsRest
+import com.nbialas.warsstarapp.stateClass.ResponseFailed
+import com.nbialas.warsstarapp.stateClass.ResponseState
+import com.nbialas.warsstarapp.stateClass.ResponseSuccess
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class HomePageViewModel : BaseViewModel() {
-    var listOfMovie = MutableLiveData<List<SingleMovie>>()
-    var showError = MutableLiveData<Boolean>(false)
-    var showProgressBar = MutableLiveData<Boolean>()
+    var state = MutableLiveData<ResponseState>()
+
 
     fun getAllMovies() {
-        showProgressBar.postValue(true)
-        showError.postValue(false)
         rxDisposer.add(
             StarWarsRest.service.allMovies().subscribeOn(Schedulers.io()).observeOn(
                 AndroidSchedulers.mainThread()
             ).subscribe({
-                showError.postValue(false)
-                showProgressBar.postValue(false)
-                listOfMovie.postValue(it.results)
+                state.postValue(ResponseSuccess(it.results))
             }, {
-                showError.postValue(true)
-                showProgressBar.postValue(false)
-
+                state.postValue(ResponseFailed)
             })
         )
     }

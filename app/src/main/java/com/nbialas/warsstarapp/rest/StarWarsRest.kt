@@ -1,7 +1,7 @@
 package com.nbialas.warsstarapp.rest
 
 import com.google.gson.GsonBuilder
-import com.nbialas.warsstarapp.const.Const.BASE_URL
+import com.nbialas.warsstarapp.const.ApiConst.BASE_URL
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory

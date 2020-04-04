@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">WarsStarApp</string>
-    <string name="error_text">Złego coś stało się :(</string>
+    <string name="error_text">Something went wrong(</string>
     <string name="contentDesc">image</string>
-    <string name="refresh">Odśwież</string>
+    <string name="refresh">Refresh</string>
 </resources>

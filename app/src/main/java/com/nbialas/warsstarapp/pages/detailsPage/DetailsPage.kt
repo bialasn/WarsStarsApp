@@ -9,12 +9,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nbialas.warsstarapp.R
+import com.nbialas.warsstarapp.base.BasePage
 import com.nbialas.warsstarapp.const.Const.MOVIE_ID
 import com.nbialas.warsstarapp.models.movie.SingleMovie
 import kotlinx.android.synthetic.main.page_single_movie.*
 
 
-class DetailsPage : Fragment() {
+class DetailsPage : BasePage() {
 
     lateinit var viewModel: DetailsPageViewModel
     private val adapter by lazy { CharacterAdapter() }
@@ -46,10 +47,10 @@ class DetailsPage : Fragment() {
             if (it) adapter.setData(viewModel.listToAdapter)
         })
         viewModel.showProgressBar.observe(viewLifecycleOwner, Observer {
-            progressBarSingleMovie.visibility = viewModel.setVisibility(it)
+            progressBarSingleMovie.visibility = setVisibility(it)
         })
         viewModel.showError.observe(viewLifecycleOwner, Observer {
-            errorMessageCharacterList.visibility = viewModel.setVisibility(it)
+            errorMessageCharacterList.visibility = setVisibility(it)
         })
     }
 
